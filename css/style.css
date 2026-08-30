@@ -1,0 +1,95 @@
+:root{
+  --bg:#f4eddf;--panel:#fffaf1;--panel2:#f7efdf;--ink:#281f17;--muted:#716656;
+  --line:#ddcca8;--grape:#5a304f;--grape2:#70415f;--gold:#c59a38;--green:#2f7054;
+  --greenBg:#eaf5ef;--red:#a0413e;--redBg:#fbeceb;--orange:#8b681f;--orangeBg:#fbf1dc;
+  --blue:#43677d;--blueBg:#eaf2f7;--shadow:0 16px 34px rgba(66,45,24,.08)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(180deg,#fbf5ea 0,#f4eddf 360px,#f4eddf 100%);
+  min-height:100%;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1120px;margin:auto;padding:18px 14px 82px}
+.header{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:14px}
+.kicker{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:850}
+h1{font-family:Georgia,serif;font-size:clamp(28px,7vw,44px);margin:4px 0 6px;line-height:1}
+h1 em{color:var(--grape);font-weight:500}
+.sub{margin:0;color:var(--muted);font-size:13px;line-height:1.45;max-width:700px}
+.install-btn{border:1px solid var(--grape);background:var(--grape);color:white;border-radius:11px;padding:9px 12px;font-weight:800;white-space:nowrap}
+.install-btn.hidden{display:none}
+
+.nav{display:flex;gap:7px;overflow:auto;padding:4px 0 10px;margin-bottom:10px;scrollbar-width:thin}
+.nav button{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:11px;padding:10px 12px;font-size:12px;font-weight:800;white-space:nowrap}
+.nav button.active{background:var(--grape);border-color:var(--grape);color:white}
+.module{display:none}.module.active{display:block}
+
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0 16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 5px 14px rgba(62,42,20,.035)}
+.stat b{display:block;font-size:18px;margin-bottom:3px}.stat span{font-size:9.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:var(--shadow)}
+.stack{display:grid;gap:14px}
+.grid2{display:grid;grid-template-columns:minmax(320px,.86fr) minmax(0,1.4fr);gap:14px;align-items:start}
+.calc-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,.8fr);gap:14px;align-items:start}
+.result-panel{position:sticky;top:10px}
+.panel h2{font-family:Georgia,serif;font-size:18px;margin:0 0 4px}
+.hint{font-size:11.5px;color:var(--muted);line-height:1.4;margin:0 0 13px}
+.section{font-size:10px;color:var(--grape);font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin:14px 0 8px;padding-top:12px;border-top:1px dashed var(--line)}
+.section.first{border-top:0;padding-top:0;margin-top:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.form-grid .full{grid-column:1/-1}
+label{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:850;margin-bottom:4px}
+.field{width:100%;min-height:44px;border:1px solid var(--line);background:#fffdf8;border-radius:10px;padding:9px 10px;color:var(--ink);outline:none;font-size:16px}
+.field:focus{border-color:var(--grape);box-shadow:0 0 0 3px rgba(90,48,79,.1)}
+textarea.field{min-height:76px;resize:vertical}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.btn{border-radius:10px;padding:9px 11px;font-weight:800;border:1px solid transparent;min-height:42px}
+.btn.primary{background:var(--grape);border-color:var(--grape);color:white}
+.btn.secondary{background:var(--panel2);border-color:var(--line);color:var(--ink)}
+.btn.success{background:var(--green);border-color:var(--green);color:white}
+.btn.danger{background:var(--redBg);border-color:#e2b5b3;color:var(--red)}
+.btn.small{min-height:34px;padding:6px 8px;font-size:10.5px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.toolbar .grow{flex:1 1 220px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fffdf8}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{padding:8px 9px;border-bottom:1px solid #eadfc8;text-align:left;font-size:11px;vertical-align:middle}
+th{background:var(--panel2);font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:4px 7px;font-size:9px;font-weight:850;white-space:nowrap}
+.badge.Disponible{background:var(--greenBg);color:var(--green);border-color:#bcdcca}
+.badge.Separado{background:var(--orangeBg);color:var(--orange);border-color:#ead5a6}
+.badge.Vendido{background:var(--blueBg);color:var(--blue);border-color:#bfd3df}
+.badge.Bloqueado{background:var(--redBg);color:var(--red);border-color:#e3bab7}
+
+.selector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.calculator-card{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fffdf8}
+.lot-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;border-bottom:1px dashed var(--line);padding-bottom:11px}
+.lot-id{font-family:Georgia,serif;font-size:28px;margin:0;font-weight:800}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.meta{background:var(--panel2);border-radius:10px;padding:9px}.meta span{display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.meta b{font-size:11.5px}
+.price-label{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:850}
+.cash-price{font-size:31px;color:var(--grape);font-weight:900;line-height:1;margin:5px 0 3px}
+.receipt{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fffdf8;margin-top:10px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:11.5px;color:var(--muted)}.row b{color:var(--ink);text-align:right}.row.total{border-top:1px dashed var(--line);margin-top:5px;padding-top:9px;font-size:13px;font-weight:850}
+.notice{margin-top:9px;padding:8px 9px;border-radius:9px;background:var(--orangeBg);color:var(--muted);font-size:10.5px;line-height:1.4}
+.empty{min-height:280px;display:grid;place-items:center;text-align:center;color:var(--muted)}
+.empty .dash{font-family:Georgia,serif;font-size:46px;color:var(--line)}
+
+.card-list{display:grid;gap:8px}
+.quote-card{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fffdf8}.quote-card h3{font-size:12px;margin:0}.quote-card p{font-size:10.5px;color:var(--muted);line-height:1.4;margin:5px 0}
+.backup{border:1px dashed var(--line);border-radius:13px;padding:13px;background:var(--panel2);margin-bottom:10px}.backup h3{font-family:Georgia,serif;margin:0 0 5px;font-size:15px}.backup p{font-size:11px;color:var(--muted);line-height:1.45;margin:0 0 10px}
+.install-help{border:1px solid var(--line);background:var(--blueBg);border-radius:13px;padding:13px}.install-help b{display:block;margin-bottom:5px}.install-help p{font-size:11px;color:var(--muted);line-height:1.45;margin:0}
+.status-line{font-size:10.5px;color:var(--muted);margin-top:8px}
+
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(14px);opacity:0;background:#2d251d;color:white;padding:9px 13px;border-radius:999px;font-size:11px;transition:.2s;z-index:99;pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{margin-top:20px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:10px}
+@media(max-width:880px){.grid2,.calc-layout{grid-template-columns:1fr}.result-panel{position:static}.summary{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.app{padding:15px 10px 70px}.header{display:block}.install-btn{margin-top:10px}.form-grid,.selector-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.meta-grid{grid-template-columns:1fr}.panel{padding:13px}}
+@media(max-width:360px){.summary{grid-template-columns:1fr}}
+@media print{.header,.nav,.calc-left,.quote-actions,footer{display:none!important}.calc-layout{display:block}.result-panel{position:static;box-shadow:none;border:0}}
