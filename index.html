@@ -11,7 +11,10 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Calculadora de Lotes Pisco</title>
 <link rel="stylesheet" href="./css/style.css">
-</head>
+<style>
+#printArea{display:none;font-family:Arial;padding:30px;color:#222}
+@media print{body>*:not(#printArea){display:none!important}#printArea{display:block!important;position:absolute;left:0;top:0;width:100%}}
+</style></head>
 <body>
 <div class="app">
   <header class="header">
@@ -206,7 +209,13 @@
         </div>
       </div>
       <div class="panel">
-        <h2>Mantenimiento</h2>
+        <div class="backup">
+<h3>Datos del vendedor</h3>
+<input id="sellerName" class="field" placeholder="Nombre vendedor / propietario">
+<input id="sellerDoc" class="field" placeholder="DNI vendedor">
+<button id="saveSellerBtn" class="btn secondary" type="button" style="margin-top:8px">Guardar vendedor</button>
+</div>
+<h2>Mantenimiento</h2>
         <p class="hint">Puedes volver a cargar la tabla original de tu calculadora.</p>
         <div class="backup">
           <h3>Restaurar lotes originales</h3>
@@ -227,6 +236,15 @@
 
 <div id="toast" class="toast">Guardado</div>
 
+<script>
+window.addEventListener('load',()=>{
+ const s=JSON.parse(localStorage.getItem('pisco_seller')||'{}');
+ const n=document.getElementById('sellerName'),d=document.getElementById('sellerDoc');
+ if(n)n.value=s.nombre||''; if(d)d.value=s.documento||'';
+ const b=document.getElementById('saveSellerBtn');
+ if(b)b.onclick=()=>{localStorage.setItem('pisco_seller',JSON.stringify({nombre:n.value,documento:d.value}));alert('Vendedor guardado')};
+});
+</script>
 <script src="./main.js" defer></script>
 </body>
 </html>

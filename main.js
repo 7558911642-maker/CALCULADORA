@@ -99,6 +99,9 @@ const setQuotes=v=>setJSON('pisco_quotes',v);
 let selectedTerrainId='';
 let deferredInstallPrompt=null;
 
+function getSeller(){return JSON.parse(localStorage.getItem('pisco_seller')||'{}')}
+function setSeller(v){localStorage.setItem('pisco_seller',JSON.stringify(v))}
+
 function originalPlans(price){
   const p=ORIGINAL_FINANCING[Number(price)];
   const out={};
@@ -272,8 +275,39 @@ function renderCalcResult(){
     </div>`;
   $('saveQuoteBtn').addEventListener('click',saveQuote);
   $('shareQuoteBtn').addEventListener('click',shareQuote);
-  $('printQuoteBtn').addEventListener('click',()=>window.print());
+  $('printQuoteBtn').addEventListener('click',printQuotePDF);
 }
+
+function printQuotePDF(){
+  const t=calcTerrain();
+  if(!t)return;
+  const seller=getSeller();
+  const months=Number($('calcMeses').value),fin=Number($('calcFinanciado').value||0),ini=Number($('calcInicial').value||0);
+  const cuota=(fin-ini)/months;
+  const cliente=$('calcCliente').value.trim()||'Sin nombre';
+  const dni=$('calcDocumento').value.trim()||'-';
+  const tel=$('calcTelefono').value.trim()||'-';
+  const old=document.getElementById('printArea');
+  if(old)old.remove();
+  const div=document.createElement('div');
+  div.id='printArea';
+  div.innerHTML=`
+  <h1>LOTES SAN CLEMENTE</h1>
+  <h2>COTIZACIÓN DE FINANCIAMIENTO</h2>
+  <hr>
+  <h3>DATOS DEL CLIENTE</h3>
+  <p><b>Nombre:</b> ${esc(cliente)}<br><b>DNI / CE:</b> ${esc(dni)}<br><b>Celular:</b> ${esc(tel)}</p>
+  <h3>DATOS DEL TERRENO</h3>
+  <p><b>Lote:</b> ${esc(t.manzana)}-${esc(t.lote)}<br><b>Código:</b> ${esc(t.codigo||'')}<br><b>Área:</b> ${t.area} m²<br><b>Ubicación:</b> ${esc(t.ubicacion||'Regular')}</p>
+  <h3>FINANCIAMIENTO</h3>
+  <p><b>Precio contado:</b> ${fmt(t.precio)}<br><b>Precio financiado:</b> ${fmt(fin)}<br><b>Inicial:</b> ${fmt(ini)}<br><b>Saldo:</b> ${fmt(fin-ini)}<br><b>Plazo:</b> ${months} meses<br><b>Cuota:</b> ${fmt(cuota)}</p>
+  <br><br>
+  <table width='100%'><tr><td align='center'>_________________________<br>Firma vendedor / propietario<br>${esc(seller.nombre||'')}<br>${esc(seller.documento||'')}</td><td align='center'>_________________________<br>Firma comprador<br>${esc(cliente)}<br>DNI: ${esc(dni)}</td></tr></table>`;
+  document.body.appendChild(div);
+  window.print();
+  setTimeout(()=>div.remove(),1000);
+}
+
 function quoteText(){
   const t=calcTerrain();if(!t)return'';
   const months=Number($('calcMeses').value),fin=Number($('calcFinanciado').value||0),ini=Number($('calcInicial').value||0),cuota=(fin-ini)/months;
