@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5a304f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lotes Pisco">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>Calculadora de Lotes Pisco</title>
+<link rel="stylesheet" href="./css/style.css">
+<style>
+#printArea{display:none;font-family:Arial;padding:30px;color:#222}
+@media print{body>*:not(#printArea){display:none!important}#printArea{display:block!important;position:absolute;left:0;top:0;width:100%}}
+</style></head>
+<body>
+<div class="app">
+  <header class="header">
+    <div>
+      <div class="kicker">Calculadora inmobiliaria instalable</div>
+      <h1>Lotes <em>San Clemente</em></h1>
+      <p class="sub">Registra terrenos, calcula financiamiento, guarda cotizaciones y conserva tus datos directamente en el dispositivo.</p>
+    </div>
+    <button id="installBtn" class="install-btn hidden" type="button">Instalar app</button>
+  </header>
+
+  <nav class="nav">
+    <button class="active" data-module="inicio" type="button">Inicio</button>
+    <button data-module="calculadora" type="button">Calculadora</button>
+    <button data-module="terrenos" type="button">Terrenos</button>
+    <button data-module="cotizaciones" type="button">Cotizaciones</button>
+    <button data-module="respaldo" type="button">Respaldo</button>
+  </nav>
+
+  <section id="inicio" class="module active">
+    <div class="summary">
+      <div class="stat"><b id="sTerrenos">0</b><span>Terrenos</span></div>
+      <div class="stat"><b id="sDisponibles">0</b><span>Disponibles</span></div>
+      <div class="stat"><b id="sCotizaciones">0</b><span>Cotizaciones</span></div>
+      <div class="stat"><b id="sValor">S/ 0</b><span>Valor disponible</span></div>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h2>Uso rápido</h2>
+        <p class="hint">El flujo principal está pensado para trabajar cómodamente desde un celular.</p>
+        <div class="card-list">
+          <div class="quote-card"><h3>1. Registra o edita terrenos</h3><p>Manzana, lote, área, frente, fondo, ubicación, estado, precio y planes.</p></div>
+          <div class="quote-card"><h3>2. Abre Calculadora</h3><p>Selecciona un terreno, define inicial y plazo, y revisa la cuota mensual.</p></div>
+          <div class="quote-card"><h3>3. Guarda la cotización</h3><p>Asóciala a un cliente y consérvala en el historial del teléfono.</p></div>
+          <div class="quote-card"><h3>4. Haz respaldo</h3><p>Descarga un JSON para recuperar tus datos si cambias o borras la app.</p></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Instalación</h2>
+        <p class="hint">Cuando la aplicación esté publicada por HTTPS podrá instalarse como PWA.</p>
+        <div class="install-help">
+          <b>Android / Chrome</b>
+          <p>Usa el botón “Instalar app” cuando aparezca, o menú ⋮ → “Instalar aplicación”.</p>
+        </div>
+        <div class="install-help" style="margin-top:9px">
+          <b>iPhone / Safari</b>
+          <p>Compartir → “Añadir a pantalla de inicio”. iOS no siempre muestra un botón automático de instalación.</p>
+        </div>
+        <div class="status-line" id="storageStatus"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="calculadora" class="module">
+    <div class="calc-layout">
+      <div class="stack calc-left">
+        <div class="panel">
+          <h2>Seleccionar terreno</h2>
+          <p class="hint">Los datos se toman del inventario guardado en este dispositivo.</p>
+          <div class="selector-grid">
+            <div><label>Manzana</label><select id="calcManzana" class="field"></select></div>
+            <div><label>Lote</label><select id="calcLote" class="field"></select></div>
+            <div><label>Estado</label><input id="calcEstado" class="field" readonly></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Datos del cliente</h2>
+          <p class="hint">Opcional, pero útil si deseas guardar la cotización.</p>
+          <div class="form-grid">
+            <div class="full"><label>Nombre</label><input id="calcCliente" class="field" placeholder="Nombre del cliente"></div>
+            <div><label>DNI / CE</label><input id="calcDocumento" class="field" placeholder="Documento"></div>
+            <div><label>Celular</label><input id="calcTelefono" class="field" inputmode="tel" placeholder="987654321"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Financiamiento</h2>
+          <p class="hint">Puedes usar el plan registrado o modificar los valores para una simulación puntual.</p>
+          <div class="form-grid">
+            <div><label>Plazo</label>
+              <select id="calcMeses" class="field"><option value="12">12 meses</option><option value="24">24 meses</option><option value="36">36 meses</option><option value="48">48 meses</option></select>
+            </div>
+            <div><label>Precio financiado</label><input id="calcFinanciado" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Inicial</label><input id="calcInicial" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Cuota calculada</label><input id="calcCuota" class="field" readonly></div>
+          </div>
+          <div class="actions">
+            <button id="usePlanBtn" class="btn secondary" type="button">Restaurar plan registrado</button>
+          </div>
+        </div>
+      </div>
+
+      <aside id="calcResult" class="panel result-panel empty">
+        <div><div class="dash">—</div><b>Selecciona un terreno</b><p class="hint">Aquí aparecerá el resumen de la cotización.</p></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="terrenos" class="module">
+    <div class="grid2">
+      <div class="panel">
+        <h2>Registrar terreno</h2>
+        <p class="hint">Los terrenos nuevos quedan guardados en el almacenamiento local del dispositivo.</p>
+        <form id="terrainForm">
+          <input id="terrainId" type="hidden">
+          <div class="section first">Identificación</div>
+          <div class="form-grid">
+            <div><label>Proyecto</label><input id="tProyecto" class="field" value="San Clemente"></div>
+            <div><label>Etapa</label><input id="tEtapa" class="field" value="Primera Etapa"></div>
+            <div><label>Manzana *</label><input id="tManzana" class="field" required placeholder="A"></div>
+            <div><label>Lote / número *</label><input id="tLote" class="field" required placeholder="16"></div>
+            <div><label>Código</label><input id="tCodigo" class="field" placeholder="SC-A-16"></div>
+            <div><label>Estado</label><select id="tEstado" class="field"><option>Disponible</option><option>Separado</option><option>Vendido</option><option>Bloqueado</option></select></div>
+          </div>
+
+          <div class="section">Características</div>
+          <div class="form-grid">
+            <div><label>Área m² *</label><input id="tArea" class="field" required type="number" min="0" step="0.01"></div>
+            <div><label>Frente m</label><input id="tFrente" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Fondo m</label><input id="tFondo" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Ubicación</label><select id="tUbicacion" class="field"><option>Regular</option><option>Esquina</option><option>Frente a parque</option><option>Costado de parque</option><option>Esquina / frente a parque</option><option>Otro</option></select></div>
+            <div class="full"><label>Dirección / referencia</label><input id="tDireccion" class="field"></div>
+          </div>
+
+          <div class="section">Precio y planes</div>
+          <div class="form-grid">
+            <div class="full"><label>Precio contado *</label><input id="tPrecio" class="field" required type="number" min="0" step="0.01"></div>
+            <div><label>Total 12 meses</label><input id="tF12" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Inicial 12 meses</label><input id="tI12" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Total 24 meses</label><input id="tF24" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Inicial 24 meses</label><input id="tI24" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Total 36 meses</label><input id="tF36" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Inicial 36 meses</label><input id="tI36" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Total 48 meses</label><input id="tF48" class="field" type="number" min="0" step="0.01"></div>
+            <div><label>Inicial 48 meses</label><input id="tI48" class="field" type="number" min="0" step="0.01"></div>
+            <div class="full"><label>Observaciones</label><textarea id="tNotas" class="field"></textarea></div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" type="submit" id="terrainSaveBtn">Guardar terreno</button>
+            <button class="btn secondary" type="button" id="terrainCancelBtn" style="display:none">Cancelar edición</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Inventario</h2>
+        <p class="hint">Busca, edita, cambia de estado o elimina terrenos.</p>
+        <div class="toolbar">
+          <input id="terrainSearch" class="field grow" type="search" placeholder="Buscar manzana, lote o código...">
+          <select id="terrainFilter" class="field" style="width:auto"><option value="">Todos</option><option>Disponible</option><option>Separado</option><option>Vendido</option><option>Bloqueado</option></select>
+          <button id="exportTerrainsExcel" class="btn secondary" type="button">Descargar Excel</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Terreno</th><th>Área</th><th>Estado</th><th>Precio</th><th>Acciones</th></tr></thead>
+            <tbody id="terrainRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cotizaciones" class="module">
+    <div class="panel">
+      <h2>Historial de cotizaciones</h2>
+      <p class="hint">Se guarda localmente en este dispositivo.</p>
+      <div class="toolbar">
+        <input id="quoteSearch" class="field grow" type="search" placeholder="Buscar cliente o lote...">
+        <button id="exportQuotesExcel" class="btn secondary" type="button">Descargar Excel</button>
+      </div>
+      <div id="quoteList" class="card-list"></div>
+    </div>
+  </section>
+
+  <section id="respaldo" class="module">
+    <div class="grid2">
+      <div class="panel">
+        <h2>Respaldo</h2>
+        <p class="hint">Importante: si desinstalas la PWA o borras los datos del navegador, el almacenamiento local puede perderse.</p>
+        <div class="backup">
+          <h3>Exportar todo</h3>
+          <p>Descarga terrenos y cotizaciones en un solo archivo JSON.</p>
+          <button id="backupBtn" class="btn primary" type="button">Descargar respaldo JSON</button>
+          <button id="exportAllExcel" class="btn secondary" type="button" style="margin-top:8px">Descargar Excel completo</button>
+        </div>
+        <div class="backup">
+          <h3>Importar respaldo</h3>
+          <p>Restaura un archivo JSON exportado por esta aplicación.</p>
+          <input id="restoreFile" class="field" type="file" accept=".json,application/json">
+          <button id="restoreBtn" class="btn secondary" type="button" style="margin-top:8px">Importar</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="backup">
+<h3>Datos del vendedor</h3>
+<input id="sellerName" class="field" placeholder="Nombre vendedor / propietario">
+<input id="sellerDoc" class="field" placeholder="DNI vendedor">
+<button id="saveSellerBtn" class="btn secondary" type="button" style="margin-top:8px">Guardar vendedor</button>
+</div>
+<h2>Mantenimiento</h2>
+        <p class="hint">Puedes volver a cargar la tabla original de tu calculadora.</p>
+        <div class="backup">
+          <h3>Restaurar lotes originales</h3>
+          <p>Reemplaza el inventario por los lotes del archivo original y conserva las cotizaciones.</p>
+          <button id="seedBtn" class="btn secondary" type="button">Restaurar inventario</button>
+        </div>
+        <div class="backup">
+          <h3 style="color:var(--red)">Borrar todo</h3>
+          <p>Elimina terrenos y cotizaciones guardados localmente.</p>
+          <button id="clearBtn" class="btn danger" type="button">Borrar datos locales</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer><span>Calculadora de Lotes Pisco · PWA local</span><span>Los datos permanecen en este dispositivo hasta que se borren o restablezcan.</span></footer>
+</div>
+
+<div id="toast" class="toast">Guardado</div>
+
+<script>
+window.addEventListener('load',()=>{
+ const s=JSON.parse(localStorage.getItem('pisco_seller')||'{}');
+ const n=document.getElementById('sellerName'),d=document.getElementById('sellerDoc');
+ if(n)n.value=s.nombre||''; if(d)d.value=s.documento||'';
+ const b=document.getElementById('saveSellerBtn');
+ if(b)b.onclick=()=>{localStorage.setItem('pisco_seller',JSON.stringify({nombre:n.value,documento:d.value}));alert('Vendedor guardado')};
+});
+</script>
+<script src="./main.js" defer></script>
+</body>
+</html>
